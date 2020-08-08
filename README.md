@@ -1,11 +1,11 @@
-# Lucky
+### Lucky
 
 
-## how to be
+#### test
 
 ```
 javac *.java
-java TripleWordSequenceCount 	pg2009.txt
+java TripleWordSequenceCount pg2009.txt
 ```
 
 ```
