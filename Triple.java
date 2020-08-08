@@ -89,13 +89,15 @@ public class Triple<L, M, R> implements Comparable<Triple<L, M, R>>, Serializabl
 
     @Override
     public String toString() {
-        return new StringBuilder().append('(').append(getLeft()).append(',').append(getMiddle()).append(',')
-                .append(getRight()).append(')').toString();
+        return new StringBuilder()
+                .append(getLeft())
+                .append(' ')
+                .append(getMiddle())
+                .append(' ')
+                .append(getRight())
+                .toString();
     }
 
-    public String toString(final String format) {
-        return String.format(format, getLeft(), getMiddle(), getRight());
-    }
 
 }
 

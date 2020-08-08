@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 class TripleWordSequenceCount {
@@ -46,15 +47,9 @@ class TripleWordSequenceCount {
     }
 
     private static String toString(List<Map.Entry<Triple, Integer>> list) {
-        StringBuilder sb = new StringBuilder();
-        for (Map.Entry<Triple, Integer> entry : list) {
-            Triple triple = entry.getKey();
-            sb.append(entry.getValue()).append(" - ");
-            sb.append(triple.getLeft()).append(" ").append(triple.getMiddle()).append(" ").append(triple.getRight());
-            sb.append(", ");
-        }
-
-        return sb.toString();
+        StringJoiner joiner = new StringJoiner(", ");
+        list.stream().map(entry -> entry.getValue() + " - " + entry.getKey()).forEach(joiner::add);
+        return joiner.toString();
     }
 
 
@@ -120,7 +115,7 @@ class TripleWordSequenceCount {
             if (s1 == null) {
                 continue;
             }
-            if (!s1.isEmpty() && !s2.isEmpty() && !s3.isEmpty()) {
+            if (!(s1.isEmpty() || s2.isEmpty() || s3.isEmpty())) {
                 map.merge(Triple.of(s1, s2, s3), 1, Integer::sum);
             }
 
