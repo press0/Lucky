@@ -1,4 +1,5 @@
 
+###### 3-Tuple word count demo. Handles one or multiple large files.  Low memory footprint. 
 
 
 ###### build, test http://www.gutenberg.org/cache/epub/2009/pg2009.txt
