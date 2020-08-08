@@ -1,5 +1,6 @@
 
-###### 3-Tuple word count demo. Handles one or multiple large files.  Low memory footprint. 
+###### 3-Tuple word count demo. 
+Handles standard input, jvm arguments, and one or multiple large files.  Low memory footprint. 
 
 test file source: http://www.gutenberg.org/cache/epub/2009/pg2009.txt
 
