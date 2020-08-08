@@ -17,21 +17,15 @@ class TripleWordSequenceCount {
     private static final long LIMIT = 100;
 
     static public void main(String args[]) {
-        if (args.length == 0) {
-            System.out.println("args required");
-            System.exit(-1);
-        }
-        //is the first arg a path that exists ?
-        Path path = Paths.get(args[0]);
-        boolean pathExists = Files.isRegularFile(path);
-        System.out.println("is first arg a file: " + pathExists);
-
         Map<Triple, Integer> map;
 
-        if (pathExists) {
-            map = doScanFiles(args);
+        if (args.length==0) {
+            map = doStandardInput();
+        } else if (Files.isRegularFile(Paths.get(args[0]))) {
+            System.out.println("first arg is a file");
+            map = doFiles(args);
         } else {
-            map = doStream(args);
+            map = doStrings(args);
         }
 
         List<Map.Entry<Triple, Integer>> list =
@@ -42,40 +36,31 @@ class TripleWordSequenceCount {
                         .collect(Collectors.toList());
 
         System.out.println(toString(list));
-
-
     }
 
-    private static String toString(List<Map.Entry<Triple, Integer>> list) {
-        StringJoiner joiner = new StringJoiner(", ");
-        list.stream().map(entry -> entry.getValue() + " - " + entry.getKey()).forEach(joiner::add);
-        return joiner.toString();
-    }
-
-
-    private static Map<Triple, Integer> doScanFiles(String[] args) {
+    private static Map<Triple, Integer> doFiles(String[] args) {
         Map<Triple, Integer> map = new HashMap<>();
         Map<Triple, Integer> mapFile;
 
         FileInputStream inputStream;
-        Scanner sc;
+        Scanner scanner;
 
         for (String string : args) {
             inputStream = null;
-            sc = null;
+            scanner = null;
             try {
                 inputStream = new FileInputStream(string);
-                sc = new Scanner(inputStream, "UTF-8");
-                while (sc.hasNextLine()) {
-                    String line = sc.nextLine();
+                scanner = new Scanner(inputStream, "UTF-8");
+                while (scanner.hasNextLine()) {
+                    String line = scanner.nextLine();
 
                     String[] strings = line.split("[\\n\\t ]");
-                    mapFile = doStream(strings);
+                    mapFile = doStrings(strings);
                     mapFile.forEach((k, v) -> map.merge(k, v, Integer::sum));
 
                 }
-                if (sc.ioException() != null) {
-                    throw sc.ioException();
+                if (scanner.ioException() != null) {
+                    throw scanner.ioException();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -87,8 +72,8 @@ class TripleWordSequenceCount {
                         e.printStackTrace();
                     }
                 }
-                if (sc != null) {
-                    sc.close();
+                if (scanner != null) {
+                    scanner.close();
                 }
             }
 
@@ -98,9 +83,37 @@ class TripleWordSequenceCount {
 
     }
 
-    private static Map<Triple, Integer> doStream(String[] args) {
+    private static Map<Triple, Integer> doStandardInput() {
         Map<Triple, Integer> map = new HashMap<>();
 
+        String s1;
+        String s2 = null;
+        String s3 = null;
+
+        Scanner scanner = new Scanner(System.in);
+        while (scanner.hasNext()) {
+            String string = scanner.next();
+            s1 = s2;
+            s2 = s3;
+            s3 = string
+                    .toLowerCase()
+                    .replaceAll("[\\n\\t ]", "")
+                    .replaceAll("\\p{Punct}", "");
+            if (s1 == null) {
+                continue;
+            }
+            if (!(s1.isEmpty() || s2.isEmpty() || s3.isEmpty())) {
+                map.merge(Triple.of(s1, s2, s3), 1, Integer::sum);
+            }
+
+        }
+
+        scanner.close();
+        return map;
+    }
+
+    private static Map<Triple, Integer> doStrings(String[] args) {
+        Map<Triple, Integer> map = new HashMap<>();
         String s1;
         String s2 = null;
         String s3 = null;
@@ -118,11 +131,15 @@ class TripleWordSequenceCount {
             if (!(s1.isEmpty() || s2.isEmpty() || s3.isEmpty())) {
                 map.merge(Triple.of(s1, s2, s3), 1, Integer::sum);
             }
-
         }
 
         return map;
+    }
 
+    private static String toString(List<Map.Entry<Triple, Integer>> list) {
+        StringJoiner joiner = new StringJoiner(", ");
+        list.stream().map(entry -> entry.getValue() + " - " + entry.getKey()).forEach(joiner::add);
+        return joiner.toString();
     }
 
 }
