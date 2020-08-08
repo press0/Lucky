@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 class TripleWordSequenceCount {
 
-    private static final long LIMIT = 10;
+    private static final long LIMIT = 100;
 
     static public void main(String args[]) {
         if (args.length == 0) {
