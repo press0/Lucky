@@ -1,6 +1,6 @@
 
 ### Triple word sequnce counts
-Handles standard input, jvm arguments, and one or multiple large files.  Low memory footprint. 
+Handles standard input, jvm arguments, multiple large files.  Low memory footprint. 
 
 test file source: http://www.gutenberg.org/cache/epub/2009/pg2009.txt
 
